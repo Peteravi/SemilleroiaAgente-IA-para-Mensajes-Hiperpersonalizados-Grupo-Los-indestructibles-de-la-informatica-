@@ -25,3 +25,8 @@ CristiR12
 Descripción breve
 
 Agente inteligente diseñado para generar mensajes hiper personalizados a partir del análisis del perfil del usuario, su contexto y objetivos específicos. El sistema adapta el contenido, tono y estilo de los mensajes utilizando técnicas de inteligencia artificial, permitiendo mejorar la comunicación, la experiencia del usuario y la efectividad en entornos como atención al cliente, marketing digital y notificaciones automatizadas.
+
+
+
+Video :https://drive.google.com/file/d/1FCy4qDX-Kfj0ytkwjYJOQHa068Ii8ROS/view?usp=sharing
+GitHub: https://github.com/Peteravi/SemilleroiaAgente-IA-para-Mensajes-Hiperpersonalizados-Grupo-Los-indestructibles-de-la-informatica-.git
