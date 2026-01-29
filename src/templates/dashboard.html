@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Agente Hiperpersonalizado</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* ===== ESTILOS PRINCIPALES ===== */
+        :root {
+            --primary: #4361ee;
+            --primary-light: #eef2ff;
+            --secondary: #3a0ca3;
+            --success: #06d6a0;
+            --warning: #ffd166;
+            --danger: #ef476f;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar-custom {
+            background: white;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            padding: 1rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+
+        .navbar-brand i {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-back {
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            font-weight: 500;
+            padding: 0.5rem 1.2rem;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .btn-back:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+        }
+
+        /* ===== HEADER ===== */
+        .page-header {
+            margin-bottom: 2.5rem;
+        }
+
+        .page-header h1 {
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        .page-header p {
+            color: #64748b;
+            font-size: 1.05rem;
+            max-width: 600px;
+        }
+
+        /* ===== KPI CARDS ===== */
+        .kpi-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            height: 100%;
+            transition: var(--transition);
+            border: 1px solid #f1f5f9;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--box-shadow);
+            border-color: var(--primary-light);
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .kpi-icon {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            padding: 0.8rem;
+            border-radius: 10px;
+            background: var(--primary-light);
+        }
+
+        .kpi-icon-primary { color: var(--primary); }
+        .kpi-icon-success { color: var(--success); }
+        .kpi-icon-warning { color: var(--warning); }
+
+        .kpi-label {
+            font-size: 0.95rem;
+            color: #64748b;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .kpi-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #1e293b;
+            line-height: 1;
+        }
+
+        /* ===== CHART CARDS ===== */
+        .chart-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            height: 100%;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        }
+
+        .chart-card:hover {
+            box-shadow: var(--box-shadow);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chart-title i {
+            color: var(--primary);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 250px;
+            width: 100%;
+        }
+
+        /* ===== TABLE ===== */
+        .table-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .table-title {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .table-title i {
+            color: var(--primary);
+        }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .custom-table thead {
+            background-color: var(--primary-light);
+        }
+
+        .custom-table th {
+            padding: 1rem 1.2rem;
+            font-weight: 600;
+            color: #334155;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .custom-table td {
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+
+        .custom-table tbody tr {
+            transition: var(--transition);
+        }
+
+        .custom-table tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .custom-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .date-cell {
+            font-weight: 500;
+            color: #334155;
+        }
+
+        .number-cell {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* ===== LOADING STATE ===== */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .kpi-value {
+                font-size: 1.8rem;
+            }
+            
+            .chart-container {
+                height: 200px;
+            }
+            
+            .custom-table {
+                font-size: 0.9rem;
+            }
+            
+            .custom-table th,
+            .custom-table td {
+                padding: 0.8rem;
+            }
+            
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .kpi-card {
+                padding: 1.2rem;
+            }
+            
+            .chart-card,
+            .table-card {
+                padding: 1.2rem;
+            }
+            
+            .kpi-value {
+                font-size: 1.6rem;
+            }
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <span class="navbar-brand">
+                <i class="bi bi-speedometer2 me-2"></i>Dashboard del Sistema
+            </span>
+            <a href="/" class="btn btn-back">
+                <i class="bi bi-arrow-left me-1"></i> Volver al Inicio
+            </a>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="container py-4">
+        <!-- HEADER -->
+        <div class="page-header fade-in">
+            <h1>Resumen General del Sistema</h1>
+            <p class="mb-0">
+                Métricas en tiempo real obtenidas a partir de las interacciones del agente generador de mensajes hiperpersonalizados.
+            </p>
+        </div>
+
+        <!-- KPI CARDS -->
+        <div class="row g-4 mb-5 fade-in">
+            <div class="col-md-4">
+                <div class="kpi-card">
+                    <div class="kpi-icon kpi-icon-primary">
+                        <i class="bi bi-chat-dots"></i>
+                    </div>
+                    <div class="kpi-label">Total de Recomendaciones</div>
+                    <div id="totalRecs" class="kpi-value">0</div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="kpi-card">
+                    <div class="kpi-icon kpi-icon-success">
+                        <i class="bi bi-bar-chart-line"></i>
+                    </div>
+                    <div class="kpi-label">Match Promedio (%)</div>
+                    <div id="avgMatch" class="kpi-value">0</div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="kpi-card">
+                    <div class="kpi-icon kpi-icon-warning">
+                        <i class="bi bi-exclamation-triangle"></i>
+                    </div>
+                    <div class="kpi-label">Riesgo Más Común</div>
+                    <div id="risk" class="kpi-value">-</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHARTS -->
+        <div class="row g-4 mb-5">
+            <div class="col-lg-6 fade-in">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">
+                            <i class="bi bi-diagram-3"></i> Planes Recomendados
+                        </h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="plansChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 fade-in">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">
+                            <i class="bi bi-activity"></i> Actividad Reciente (7 días)
+                        </h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="dailyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABLE -->
+        <div class="fade-in">
+            <div class="table-card">
+                <div class="table-header">
+                    <h3 class="table-title">
+                        <i class="bi bi-table"></i> Métricas Diarias
+                    </h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Solicitudes</th>
+                                <th>Match Promedio (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dailyTable">
+                            <!-- Los datos se cargarán aquí -->
+                            <tr id="loadingRow">
+                                <td colspan="3" class="text-center py-4">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Cargando...</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Agregar clase de carga
+            document.body.classList.add('loading');
+            
+            fetch("/api/metrics")
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error('Error al cargar los datos');
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    // Actualizar KPIs
+                    document.getElementById("totalRecs").innerText = data.total_recommendations;
+                    document.getElementById("avgMatch").innerText = data.avg_match_percent;
+                    document.getElementById("risk").innerText = data.most_common_risk || "N/A";
+                    
+                    // Gráfico de barras - Planes recomendados
+                    const plansCtx = document.getElementById('plansChart').getContext('2d');
+                    const plansChart = new Chart(plansCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: data.plans.map(p => p.plan),
+                            datasets: [{
+                                label: 'Cantidad de Recomendaciones',
+                                data: data.plans.map(p => p.total),
+                                backgroundColor: [
+                                    'rgba(67, 97, 238, 0.7)',
+                                    'rgba(58, 12, 163, 0.7)',
+                                    'rgba(6, 214, 160, 0.7)',
+                                    'rgba(255, 209, 102, 0.7)',
+                                    'rgba(239, 71, 111, 0.7)'
+                                ],
+                                borderColor: [
+                                    'rgb(67, 97, 238)',
+                                    'rgb(58, 12, 163)',
+                                    'rgb(6, 214, 160)',
+                                    'rgb(255, 209, 102)',
+                                    'rgb(239, 71, 111)'
+                                ],
+                                borderWidth: 1,
+                                borderRadius: 6,
+                                borderSkipped: false,
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                },
+                                tooltip: {
+                                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                                    titleColor: '#1e293b',
+                                    bodyColor: '#334155',
+                                    borderColor: '#e2e8f0',
+                                    borderWidth: 1,
+                                    padding: 12,
+                                    boxPadding: 6
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    grid: {
+                                        color: 'rgba(226, 232, 240, 0.5)'
+                                    },
+                                    ticks: {
+                                        color: '#64748b'
+                                    }
+                                },
+                                x: {
+                                    grid: {
+                                        display: false
+                                    },
+                                    ticks: {
+                                        color: '#64748b'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                    
+                    // Gráfico de línea - Actividad diaria
+                    const dailyCtx = document.getElementById('dailyChart').getContext('2d');
+                    const dailyChart = new Chart(dailyCtx, {
+                        type: 'line',
+                        data: {
+                            labels: data.daily_metrics.map(d => new Date(d.day).toLocaleDateString('es-ES', { 
+                                month: 'short', 
+                                day: 'numeric' 
+                            })),
+                            datasets: [{
+                                label: 'Solicitudes',
+                                data: data.daily_metrics.map(d => d.total_requests),
+                                borderColor: 'rgb(67, 97, 238)',
+                                backgroundColor: 'rgba(67, 97, 238, 0.1)',
+                                borderWidth: 3,
+                                fill: true,
+                                tension: 0.4,
+                                pointBackgroundColor: 'rgb(67, 97, 238)',
+                                pointBorderColor: 'white',
+                                pointBorderWidth: 2,
+                                pointRadius: 6,
+                                pointHoverRadius: 8
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                },
+                                tooltip: {
+                                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                                    titleColor: '#1e293b',
+                                    bodyColor: '#334155',
+                                    borderColor: '#e2e8f0',
+                                    borderWidth: 1,
+                                    padding: 12
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    grid: {
+                                        color: 'rgba(226, 232, 240, 0.5)'
+                                    },
+                                    ticks: {
+                                        color: '#64748b'
+                                    }
+                                },
+                                x: {
+                                    grid: {
+                                        color: 'rgba(226, 232, 240, 0.5)'
+                                    },
+                                    ticks: {
+                                        color: '#64748b'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                    
+                    // Actualizar tabla
+                    const table = document.getElementById('dailyTable');
+                    table.innerHTML = '';
+                    
+                    data.daily_metrics.forEach(d => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td class="date-cell">${new Date(d.day).toLocaleDateString('es-ES', { 
+                                year: 'numeric', 
+                                month: 'long', 
+                                day: 'numeric' 
+                            })}</td>
+                            <td class="number-cell">${d.total_requests}</td>
+                            <td class="number-cell">${d.avg_match}</td>
+                        `;
+                        table.appendChild(row);
+                    });
+                    
+                    // Quitar clase de carga
+                    document.body.classList.remove('loading');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.body.classList.remove('loading');
+                    
+                    // Mostrar mensaje de error
+                    document.getElementById('loadingRow').innerHTML = `
+                        <td colspan="3" class="text-center py-4 text-danger">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            Error al cargar los datos. Por favor, intenta nuevamente.
+                        </td>
+                    `;
+                });
+        });
+    </script>
+</body>
+</html>

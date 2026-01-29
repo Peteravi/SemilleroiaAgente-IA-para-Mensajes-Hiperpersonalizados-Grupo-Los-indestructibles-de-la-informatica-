@@ -1,0 +1,223 @@
+/* =====================================================
+   VARIABLES
+===================================================== */
+:root {
+    --primary: #2563eb;
+    --primary-soft: #3b82f6;
+    --accent: #22c55e;
+
+    --bg-main: #f4f7fb;
+    --bg-card: #ffffff;
+    --bg-soft: #eef2ff;
+
+    --text-main: #1e293b;
+    --text-soft: #64748b;
+
+    --border-light: #e2e8f0;
+
+    --radius: 14px;
+    --radius-sm: 10px;
+
+    --shadow-sm: 0 4px 10px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.08);
+
+    --transition: 0.25s ease;
+}
+
+/* =====================================================
+   RESET
+===================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+/* =====================================================
+   BODY
+===================================================== */
+body {
+    font-family: "Inter", system-ui, sans-serif;
+    background: var(--bg-main);
+    color: var(--text-main);
+    line-height: 1.6;
+}
+
+/* =====================================================
+   LAYOUT
+===================================================== */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+/* =====================================================
+   HEADER
+===================================================== */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.dashboard-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.dashboard-header span {
+    color: var(--primary);
+}
+
+.dashboard-header .subtitle {
+    font-size: 0.95rem;
+    color: var(--text-soft);
+}
+
+/* =====================================================
+   KPI GRID
+===================================================== */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.kpi-card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 1.6rem;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.kpi-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-md);
+}
+
+.kpi-title {
+    font-size: 0.9rem;
+    color: var(--text-soft);
+    margin-bottom: 0.6rem;
+}
+
+.kpi-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+/* =====================================================
+   CHART SECTIONS
+===================================================== */
+.section {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 1.8rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.section h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1.2rem;
+}
+
+/* =====================================================
+   TABLE
+===================================================== */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+thead {
+    background: var(--bg-soft);
+}
+
+th, td {
+    padding: 0.9rem 1rem;
+    text-align: left;
+}
+
+th {
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+tbody tr {
+    border-bottom: 1px solid var(--border-light);
+}
+
+tbody tr:last-child {
+    border-bottom: none;
+}
+
+tbody tr:hover {
+    background: #f8fafc;
+}
+
+/* =====================================================
+   BADGES
+===================================================== */
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-success {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.badge-warning {
+    background: #fef9c3;
+    color: #854d0e;
+}
+
+.badge-danger {
+    background: #fee2e2;
+    color: #7f1d1d;
+}
+
+/* =====================================================
+   FOOTER
+===================================================== */
+.dashboard-footer {
+    margin-top: 3rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-soft);
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .kpi-value {
+        font-size: 1.6rem;
+    }
+}

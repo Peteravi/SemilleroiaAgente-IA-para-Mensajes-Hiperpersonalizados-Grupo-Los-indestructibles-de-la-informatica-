@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Resultado • Agente IA</title>
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+  <link rel="stylesheet" href="/static/result.css" />
+</head>
+
+<body>
+
+  <div class="bg"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo"><i class="bi bi-check-circle-fill"></i></div>
+      <div>
+        <h1>Recomendación lista</h1>
+        <p>Plan sugerido + mensajes hiperpersonalizados</p>
+      </div>
+    </div>
+
+    <div class="pill">
+      <a class="link" href="/"><i class="bi bi-arrow-left"></i> Volver</a>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="top-grid">
+
+      <!-- ================= PERFIL ================= -->
+      <article class="card">
+
+        <h2><i class="bi bi-person-circle"></i> Perfil del cliente</h2>
+
+        <div class="profile-head">
+          <div class="avatar">{{ (profile.name[:1] if profile.name else "?")|upper }}</div>
+
+          <div class="profile-head-text">
+            <div class="profile-name">
+              {{ profile.name }} <span class="muted">({{ profile.age }} años)</span>
+            </div>
+            <div class="profile-sub muted">
+              <i class="bi bi-geo-alt"></i> {{ profile.city }}
+              &nbsp;•&nbsp;
+              <i class="bi bi-wallet2"></i> Presupuesto: ${{ "%.0f"|format(profile.budget_usd) }}
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-metrics">
+          <div class="metric">
+            <div class="metric-label"><i class="bi bi-wifi"></i> Datos</div>
+            <div class="metric-value">{{ "%.1f"|format(profile.data_gb) }} <span class="muted">GB</span></div>
+          </div>
+          <div class="metric">
+            <div class="metric-label"><i class="bi bi-telephone"></i> Llamadas</div>
+            <div class="metric-value">{{ profile.minutes }} <span class="muted">min</span></div>
+          </div>
+          <div class="metric">
+            <div class="metric-label"><i class="bi bi-chat-dots"></i> SMS</div>
+            <div class="metric-value">{{ profile.sms }}</div>
+          </div>
+        </div>
+
+        <div class="badge-row">
+          {% if ui.savings_usd >= 0 %}
+          <span class="badge good"><i class="bi bi-piggy-bank"></i> Ahorro ${{ "%.0f"|format(ui.savings_usd)
+            }}/mes</span>
+          {% else %}
+          <span class="badge warn"><i class="bi bi-exclamation-circle"></i> +${{ "%.0f"|format(-ui.savings_usd)
+            }}/mes</span>
+          {% endif %}
+
+          <span class="badge {{ 'bad' if ui.risk=='Alto' else 'warn' if ui.risk=='Medio' else 'good' }}">
+            <i class="bi bi-speedometer2"></i> Riesgo: {{ ui.risk }}
+          </span>
+
+          <span class="badge">
+            <i class="bi bi-graph-up"></i> Encaje: {{ ui.match_percent }}%
+          </span>
+        </div>
+
+        <div class="profile-tags">
+          <span class="tag"><i class="bi bi-people"></i> {{ "Redes" if profile.heavy_social else "Sin redes" }}</span>
+          <span class="tag"><i class="bi bi-play-btn"></i> {{ "Video" if profile.heavy_video else "Sin video" }}</span>
+          <span class="tag"><i class="bi bi-router"></i> {{ "Hotspot" if profile.hotspot else "Sin hotspot" }}</span>
+        </div>
+
+        <div class="profile-note">
+          <span class="muted">Dolor principal:</span> {{ profile.pain_point }}
+        </div>
+
+      </article>
+
+      <!-- ================= PLAN ================= -->
+      <article class="card highlight">
+
+        <h2><i class="bi bi-star-fill"></i> Plan recomendado</h2>
+
+        <div class="plan">
+          <div class="plan-name">{{ plan.name }}</div>
+          <div class="plan-price">${{ "%.0f"|format(plan.price_usd) }}/mes</div>
+        </div>
+
+        <div class="plan-meta">
+          <span class="chip"><i class="bi bi-wifi"></i> {{ "%.0f"|format(plan.data_gb) }} GB</span>
+          <span class="chip"><i class="bi bi-telephone"></i> {{ plan.minutes }} min</span>
+          <span class="chip"><i class="bi bi-chat"></i> {{ plan.sms }} SMS</span>
+          {% if plan.social_unlimited %}<span class="chip"><i class="bi bi-people"></i> Redes ilimitadas</span>{% endif
+          %}
+          {% if plan.video_bonus_gb > 0 %}<span class="chip"><i class="bi bi-play-circle"></i> +{{ plan.video_bonus_gb
+            }} GB video</span>{% endif %}
+        </div>
+
+        <h3>¿Por qué este plan?</h3>
+        <ul class="bullets">
+          {% for r in reasons %}
+          <li>{{ r }}</li>
+          {% endfor %}
+        </ul>
+
+        <div class="actions">
+          <button class="btn primary" id="activateBtn">
+            <i class="bi bi-check2-circle"></i> Simular activación
+          </button>
+          <span class="muted small">Simulación demo</span>
+        </div>
+
+      </article>
+
+    </section>
+
+    <!-- ================= MENSAJES ================= -->
+    <section class="card messages-card">
+
+      <h2><i class="bi bi-chat-square-text"></i> Mensajes hiperpersonalizados</h2>
+
+      <div class="tabs">
+        <a class="tab" href="#formal"><i class="bi bi-file-text"></i> Formal</a>
+        <a class="tab" href="#whatsapp"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+        <a class="tab" href="#sms"><i class="bi bi-chat-text"></i> SMS</a>
+        <a class="tab" href="#ahorro"><i class="bi bi-piggy-bank"></i> Ahorro</a>
+        <a class="tab" href="#beneficios"><i class="bi bi-gift"></i> Beneficios</a>
+      </div>
+
+      <div class="msgs">
+        {% for k,v in messages.items() %}
+        <div class="msg" id="{{ k }}">
+          <div class="msg-h">{{ k|upper }}</div>
+          <pre class="msg-b">{{ v }}</pre>
+        </div>
+        {% endfor %}
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <span class="muted"><i class="bi bi-lightbulb"></i> Tip: compara dos perfiles para demostrar
+      hiperpersonalización</span>
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+
+</html>

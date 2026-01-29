@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agente IA • Mensajes Hiperpersonalizados</title>
+
+  <!-- Estilos propios -->
+  <link rel="stylesheet" href="../static/index.css" />
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</head>
+
+<body>
+  <div class="bg"></div>
+
+  <!-- HEADER -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">🤖</div>
+      <div>
+        <h1>Agente IA · Mensajes Hiperpersonalizados</h1>
+        <p>
+          <i class="bi bi-lightning-charge-fill"></i>
+          Recomendación inteligente de planes + generación automática de mensajes.
+        </p>
+      </div>
+    </div>
+
+    <div class="pill">
+      <i class="bi bi-people-fill"></i>
+      Grupo: <b>Los Indestructibles</b>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="container">
+
+    <!-- CARD FORM -->
+    <section class="card">
+      <h2>
+        <i class="bi bi-person-vcard"></i>
+        Perfil del cliente
+      </h2>
+
+      <p class="muted">
+        Ingresa los datos del cliente. El agente analizará el perfil y generará
+        una recomendación junto a mensajes listos para enviar.
+      </p>
+
+      <form class="grid" action="/recomendar" method="post">
+
+        <div class="field">
+          <label><i class="bi bi-person"></i> Nombre</label>
+          <input name="name" placeholder="Ej: Erick" required />
+        </div>
+
+        <div class="field">
+          <label><i class="bi bi-calendar-event"></i> Edad</label>
+          <input name="age" type="number" min="10" max="90" value="22" required />
+        </div>
+
+        <div class="field">
+          <label><i class="bi bi-geo-alt"></i> Ciudad</label>
+          <input name="city" placeholder="Ej: Durán" required />
+        </div>
+
+        <div class="field">
+          <label><i class="bi bi-bar-chart"></i> Consumo de datos (GB/mes)</label>
+          <input name="data_gb" type="number" min="0" max="500" step="0.1" value="8" required />
+          <small class="hint">Uso promedio recomendado: 0–60 GB</small>
+        </div>
+
+        <div class="field">
+          <label><i class="bi bi-telephone"></i> Minutos / mes</label>
+          <input name="minutes" type="number" min="0" max="10000" value="250" required />
+        </div>
+
+        <div class="field">
+          <label><i class="bi bi-chat-dots"></i> SMS / mes</label>
+          <input name="sms" type="number" min="0" max="10000" value="0" />
+        </div>
+
+        <div class="field">
+          <label><i class="bi bi-cash-coin"></i> Pago actual ($)</label>
+          <input name="current_plan_usd" type="number" min="0" max="500" step="0.5" value="18" />
+        </div>
+
+        <div class="field">
+          <label><i class="bi bi-wallet2"></i> Presupuesto ideal ($)</label>
+          <input name="budget_usd" type="number" min="0" max="500" step="0.5" value="20" required />
+        </div>
+
+        <div class="field span-2">
+          <label><i class="bi bi-exclamation-triangle"></i> Dolor principal</label>
+          <input
+            name="pain_point"
+            placeholder="Ej: me quedo sin datos / pago de más"
+            value="me quedo sin datos"
+          />
+        </div>
+
+        <div class="field">
+          <label><i class="bi bi-instagram"></i> Uso intensivo de redes</label>
+          <select name="heavy_social">
+            <option value="si">Sí</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label><i class="bi bi-play-circle"></i> Consumo alto de video</label>
+          <select name="heavy_video">
+            <option value="si">Sí</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label><i class="bi bi-wifi"></i> Uso de hotspot</label>
+          <select name="hotspot">
+            <option value="no">No</option>
+            <option value="si">Sí</option>
+          </select>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="actions span-2">
+          <button class="btn primary" type="submit">
+            <i class="bi bi-magic"></i>
+            Recomendar y generar mensajes
+            <span class="kbdhint">(Ctrl + Enter)</span>
+          </button>
+
+          <a
+            class="btn ghost"
+            href="https://github.com/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <i class="bi bi-github"></i>
+            GitHub del proyecto
+          </a>
+        </div>
+
+      </form>
+    </section>
+
+    <!-- CARD INFO -->
+    <section class="card subtle">
+      <h3>
+        <i class="bi bi-camera-video"></i>
+        Guía rápida para el video
+      </h3>
+
+      <ul class="bullets">
+        <li><b>Análisis:</b> el agente reduce fricción y mejora la conversión.</li>
+        <li><b>Arquitectura:</b> Web UI → FastAPI → Motor IA → Mensajes.</li>
+        <li><b>Demo:</b> comparar perfil ahorro vs heavy video + hotspot.</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span class="muted">
+      <i class="bi bi-cpu"></i>
+      Proyecto Semillero IA • 2026
+    </span>
+  </footer>
+
+  <!-- UX Script -->
+  <script>
+    (function () {
+      const form = document.querySelector('form[action="/recomendar"]');
+      if (!form) return;
+
+      form.addEventListener('submit', () => {
+        const btn = form.querySelector('button[type="submit"]');
+        if (btn) {
+          btn.classList.add('loading');
+          btn.disabled = true;
+          btn.innerHTML = '⏳ Generando recomendación...';
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>
